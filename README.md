@@ -10,6 +10,7 @@ A responsive React configurator for a custom 10 × 10 logo canopy. It combines p
 - Native pointer based 2D editor (no canvas framework required for the included text/image tools)
 - jsPDF for production summaries
 - Lucide React icons
+- Prettier for consistent source formatting
 
 ## Run locally
 
@@ -18,26 +19,26 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. Create a production build with `npm run build`, then serve it with `npm run preview`.
+Open the local URL printed by Vite. Use `npm run format` to format source files, `npm run build` to create a production build, and `npm run preview` to serve that build.
 
 ## Architecture
 
 ```text
 src/
-  components/   2D artwork editor and Three.js canopy preview
-  services/     pricing quote and mock Shopify cart abstractions
+  components/   focused page sections, controls, editor and 3D preview
+  services/     mock pricing and Shopify cart adapters
   state/        shared Zustand configuration store
-  types/        product, surface and artwork model
-  utils/        PDF production summary
-  App.tsx       composition and product controls
-  style.css     responsive product configurator UI
+  types/        product, surface and artwork models
+  utils/        formatting and PDF generation
+  App.tsx       app state and page composition
+  style.css     responsive product configurator styles
 ```
 
 `ProductConfig` in `src/types/config.ts` is the shared source of truth. It contains product and configuration IDs, selected frame package, wall options, and a customization record for `roof`, `valance`, `left`, `right`, and `back`. Each surface holds its own fabric color and artwork array. Artwork stores text or uploaded image metadata, color, font size, normalized position, scale, and rotation. Zustand actions update one surface at a time; the store persists the current design in local storage.
 
 ## Editing and 3D synchronization
 
-Choose a surface in the surface strip, then edit its color and artwork. The 2D editor supports adding editable text, uploading raster/vector image files, selecting and dragging an object, changing text, color, scale, font size and rotation. Design coordinates use percentages relative to the selected panel, so each surface retains independent state when switching. The 3D scene reads the same store and applies each surface's colors and design textures to its canopy/panels. OrbitControls support pointer rotation and wheel zoom.
+Choose a surface in the surface strip, then edit its color and artwork. The 2D editor supports adding editable text, uploading raster/vector image files, selecting and dragging an object, changing text, color, scale, font size and rotation. Design coordinates use percentages relative to the selected panel, so each surface retains independent state when switching. The 3D scene reads the same store and applies each surface's colors and design textures to its canopy/panels. The frame uses four corner legs, perimeter rails, and short roof supports tucked below the fabric. OrbitControls support pointer rotation and wheel zoom.
 
 The editor uses normal browser image decoding and data URLs, keeping uploaded files local to the browser. For a production app, upload originals to object storage and store durable asset URLs instead of data URLs.
 
